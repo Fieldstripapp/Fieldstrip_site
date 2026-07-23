@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Support — Fieldstrip L.L.C.</title>
-<meta name="description" content="Support and contact for the Fieldstrip firearm maintenance app.">
+<meta name="description" content="Support, getting-started basics, and FAQ for the Fieldstrip firearm maintenance app. Local-first: your data stays on your device.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,6 +12,8 @@
 :root{--ink:#101317;--panel:#191E23;--line:#2A3138;--amber:#F59E0B;--bone:#E8E6E1;--muted:#8B949C;
 --mono:'IBM Plex Mono',monospace;--disp:'Barlow Condensed',sans-serif;--body:'Inter',sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.7}
 a{color:var(--amber);text-decoration:none} a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--amber);outline-offset:3px}
@@ -24,14 +26,25 @@ header{border-bottom:1px solid var(--line)}
 nav{margin-left:auto;display:flex;gap:22px}
 nav a{font-family:var(--disp);font-weight:600;font-size:14.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
 nav a:hover{color:var(--amber);text-decoration:none}
-h1{font-family:var(--disp);font-weight:700;font-size:40px;letter-spacing:.04em;text-transform:uppercase;margin:52px 0 26px}
-h2{font-family:var(--disp);font-weight:600;font-size:22px;letter-spacing:.06em;text-transform:uppercase;margin:34px 0 10px}
+h1{font-family:var(--disp);font-weight:700;font-size:40px;letter-spacing:.04em;text-transform:uppercase;margin:52px 0 8px}
+.sub{color:var(--muted);max-width:660px;margin-bottom:20px}
+.secno{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.14em;display:block;margin-top:44px}
+h2.sec{font-family:var(--disp);font-weight:600;font-size:26px;letter-spacing:.05em;text-transform:uppercase;margin:6px 0 6px}
+.rule{height:1px;background:var(--line);margin:12px 0 24px}
+h2{font-family:var(--disp);font-weight:600;font-size:21px;letter-spacing:.05em;text-transform:uppercase;margin:30px 0 8px;color:var(--bone)}
 h2 span{color:var(--amber);font-family:var(--mono);font-size:13px;margin-right:10px}
 p{color:var(--muted);margin-bottom:13px;max-width:660px}
 strong{color:var(--bone)}
-.mailcard{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:22px 24px;margin:10px 0 26px;max-width:660px}
+/* getting-started steps */
+.steps{list-style:none;counter-reset:s;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:4px 0 8px;max-width:660px}
+.steps li{background:var(--panel);padding:20px 22px 22px;counter-increment:s;position:relative}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.1em}
+.steps h3{font-family:var(--disp);font-weight:600;font-size:19px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone);margin:4px 0 6px}
+.steps p{font-size:14.5px;margin:0;max-width:none}
+.mailcard{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:22px 24px;margin:14px 0 8px;max-width:660px}
 .mailcard .k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--amber)}
 .mailcard .v{font-family:var(--disp);font-size:26px;font-weight:600;letter-spacing:.04em;margin-top:4px}
+.mailcard .n{color:var(--muted);font-size:13.5px;margin:8px 0 0}
 footer{margin-top:70px;border-top:1px solid var(--line);padding:26px 0 40px}
 .footrow{display:flex;flex-wrap:wrap;gap:10px 34px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .footrow a{color:var(--muted)} .footrow a:hover{color:var(--amber)}
@@ -48,26 +61,56 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:26px 0 40px}
 </header>
 <main class="plate">
   <h1>Support</h1>
+  <p class="sub">Getting started, answers to common questions, and how to reach a human. Fieldstrip is a maintenance aid — always follow your firearm's owner's manual, and treat every firearm as loaded until you have verified otherwise.</p>
 
-  <div class="mailcard">
-    <div class="k">EMAIL — ANSWERED BY A HUMAN, USUALLY WITHIN 2 BUSINESS DAYS</div>
-    <div class="v"><a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a></div>
-  </div>
+  <span class="secno">A · GETTING STARTED</span>
+  <h2 class="sec">Your first clean</h2>
+  <div class="rule"></div>
+  <ol class="steps">
+    <li>
+      <h3>Add a firearm</h3>
+      <p>Open <strong>My Safe</strong> and search the catalog — pistols, revolvers, shotguns, rifles, and suppressors. Tap your make and model to add it. The free tier holds two firearms; Pro removes the limit.</p>
+    </li>
+    <li>
+      <h3>Clear it first — the safety gate</h3>
+      <p>Every guide opens on a <strong>safety gate</strong>. Confirm the firearm is unloaded and pointed in a safe direction by checking each box; the guide will not begin the teardown until all checks are made. This step is not optional and cannot be skipped.</p>
+    </li>
+    <li>
+      <h3>Follow the guide</h3>
+      <p>Step through the illustrated field-strip with <strong>Next Step</strong>. Each part is highlighted in the diagram as you reach it, and the <strong>Parts Diagram</strong> lets you tap any component to identify it. Deep-clean paths, care reminders, and record-keeping are there when you want them.</p>
+    </li>
+  </ol>
+
+  <span class="secno">B · FREQUENTLY ASKED</span>
+  <h2 class="sec">Questions</h2>
+  <div class="rule"></div>
+
+  <h2><span>Q</span>Is my data private?</h2>
+  <p><strong>Yes.</strong> Fieldstrip is local-first: your firearms, ammunition, magazines, maintenance history, and reminders are stored on your device — no account, no cloud sync, no ads, and nothing sold or shared. Full details are in the <a href="privacy.html">privacy policy</a>.</p>
+
+  <h2><span>Q</span>Does the app need an internet connection?</h2>
+  <p><strong>No.</strong> Everything runs on-device and works fully offline. The Android release build declares <strong>no network permissions at all</strong> — it cannot transmit your data even in principle, a fact you can verify in the app's Android manifest.</p>
+
+  <h2><span>Q</span>How do I request a firearm that isn't in the catalog?</h2>
+  <p>Email <a href="mailto:contact@fieldstripllc.com?subject=FS-REQ%20(web)%3A%20">contact@fieldstripllc.com</a> with the make, model, and variant — the most-requested platforms get built first. In the app, firearm requests are a Pro feature; from here, a plain email is all it takes.</p>
+
+  <h2><span>Q</span>How do I back up my data?</h2>
+  <p>Because your records live only on your device, your device's own backup is your backup. Fieldstrip is included in Android's backup, so a Google-account backup or a device-to-device transfer carries your data to a new phone. Keep that backup current — <strong>deleting the app without a backup deletes the data</strong>, and we hold no copy on any server.</p>
 
   <h2><span>Q</span>Is the app available yet?</h2>
-  <p>Fieldstrip is in active development. The Android release comes first, with iOS following. Email us if you'd like to be notified at launch.</p>
-
-  <h2><span>Q</span>Where is my data stored?</h2>
-  <p>On your device. Fieldstrip is local-first — no account, no cloud sync, no ads. Deleting the app deletes your data. Details in the <a href="privacy.html">privacy policy</a>.</p>
-
-  <h2><span>Q</span>Which firearms are supported?</h2>
-  <p>Guided cleaning launches with popular pistol, pump-action shotgun, and modern sporting rifle platforms, and the catalog grows continuously. Each guide is built per-model from 3D-rendered diagrams and checked against the manufacturer's published procedures.</p>
+  <p>Fieldstrip's first release is a native Android build, with iOS to follow. Once it's released, app updates arrive automatically through Google Play — you won't need to reinstall to stay current. To be notified at launch, email <a href="mailto:contact@fieldstripllc.com?subject=NOTIFY">contact@fieldstripllc.com</a> with the subject <strong>NOTIFY</strong>.</p>
 
   <h2><span>Q</span>Does Fieldstrip replace my owner's manual?</h2>
   <p><strong>No.</strong> Fieldstrip is a maintenance aid. Your manufacturer's manual is the authority for your specific firearm, and anything beyond routine field-strip cleaning belongs with a qualified gunsmith. The app is intended for lawful owners aged 18 and over.</p>
 
-  <h2><span>Q</span>Found a bug? Have a model request?</h2>
-  <p>Email <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a> with your device model and what you saw — screenshots welcome. Model requests are logged and prioritized by demand.</p>
+  <span class="secno">C · CONTACT</span>
+  <h2 class="sec">Reach a human</h2>
+  <div class="rule"></div>
+  <div class="mailcard">
+    <div class="k">EMAIL — ANSWERED BY A HUMAN, USUALLY WITHIN 2 BUSINESS DAYS</div>
+    <div class="v"><a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a></div>
+    <p class="n">Bug reports welcome — include your device model and what you saw (screenshots help). Model requests are logged and prioritized by demand.</p>
+  </div>
 </main>
 <footer>
   <div class="plate footrow">

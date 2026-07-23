@@ -42,12 +42,45 @@ nav a:hover{color:var(--amber);text-decoration:none}
 .figbody svg{display:block;width:100%;height:auto}
 .leg{display:flex;flex-wrap:wrap;gap:8px 30px;padding:14px 18px 16px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .leg b{color:var(--amber);font-weight:500;margin-right:8px}
+/* FIG 1 — frozen guide moment: real app render + app .hl glow + one step marker */
+.figstep{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;border-bottom:1px solid var(--line);padding:9px 16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em}
+.figstep .sn{color:var(--amber)}
+.figstep .st{color:var(--bone);letter-spacing:.16em}
+.figbody--guide{display:flex;justify-content:center;padding:22px 20px 4px}
+.figframe{position:relative;width:100%;max-width:452px;aspect-ratio:985 / 1379;margin:0 auto}
+.figframe .gl{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.figframe img.hl{filter:drop-shadow(0 0 5px rgba(232,163,61,.9)) drop-shadow(0 0 14px rgba(232,163,61,.45)) brightness(1.35)}
+.figframe .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.figframe .rings .dim{opacity:.42}
+/* FIG 2 — portrait deep-clean detail inset, centered */
+.figbody--detail{display:flex;justify-content:center;padding:24px 20px 18px}
+.figbody--detail img{width:auto;max-width:300px;height:auto;border-radius:3px;border:1px solid var(--line)}
 
 .hero{padding:52px 0 10px}
 h1{font-family:var(--disp);font-weight:700;font-size:clamp(38px,6vw,62px);line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
 h1 em{font-style:normal;color:var(--amber)}
 .lede{max-width:640px;margin-top:18px;color:var(--muted);font-size:17.5px}
 .status{display:inline-block;margin-top:26px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:7px 13px}
+.fine{font-size:14px;color:var(--muted)}
+/* request form — plate style, zero-server (client-side mailto compose only) */
+.reqform{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:22px 22px 22px;max-width:700px;margin:6px 0 12px}
+.reqgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1 / -1}
+.field label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--amber);text-transform:uppercase}
+.field label .opt{color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--ink);border:1px solid var(--line);border-radius:3px;color:var(--bone);font-family:var(--body);font-size:15px;padding:10px 12px;width:100%}
+.field textarea{min-height:82px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--amber);outline-offset:1px;border-color:var(--amber)}
+.reqactions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:18px}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--ink);background:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:11px 18px;cursor:pointer}
+.btn:hover{background:#ffb020}
+.btn.ghost{background:transparent;color:var(--amber)}
+.btn.ghost:hover{background:rgba(245,158,11,.08)}
+.reqfallback{max-width:700px;margin:0 0 12px}
+.reqfallback summary{font-family:var(--mono);font-size:12.5px;color:var(--amber);cursor:pointer;letter-spacing:.04em;padding:4px 0}
+.reqfallback pre{white-space:pre-wrap;word-break:break-word;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--muted);margin:10px 0}
+.reqfallback .fbrow{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
 
 /* manual sections */
 section{padding:64px 0 8px}
@@ -71,6 +104,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 .footrow a{color:var(--muted)}
 .footrow a:hover{color:var(--amber)}
 @media(max-width:640px){nav{margin-left:0;width:100%}}
+@media(max-width:560px){.reqgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -82,6 +116,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <nav>
       <a href="#product">Product</a>
       <a href="#privacy">Privacy</a>
+      <a href="#request">Request</a>
       <a href="#company">Company</a>
       <a href="support.html">Support</a>
     </nav>
@@ -93,51 +128,45 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   <div class="hero">
     <h1>Firearm maintenance,<br><em>step by step.</em></h1>
     <p class="lede">Fieldstrip is a guided cleaning and maintenance app for firearm owners. Illustrated, animated field-strip instructions built from 3D-rendered diagrams — plus the record-keeping a safe, well-maintained collection deserves.</p>
-    <span class="status">STATUS: IN DEVELOPMENT — ANDROID FIRST, iOS FOLLOWING</span>
+    <span class="status">STATUS: ANDROID RELEASE IN PREPARATION — iOS TO FOLLOW</span>
   </div>
 
-  <div class="fig" aria-label="Figure 1: exploded field-strip diagram, pump-action shotgun">
-    <div class="figbar"><span><b>FIG. 1</b> — FIELD-STRIP CONFIGURATION, PUMP-ACTION SHOTGUN</span><span>ORTHO / MUZZLE RIGHT</span></div>
-    <div class="figbody">
-      <svg viewBox="0 0 960 300" role="img" aria-label="Line diagram of a pump-action shotgun separated into barrel, forend, and receiver groups with numbered callouts">
-        <g stroke="#E8E6E1" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
-          <!-- 1: barrel (up-forward) -->
-          <g>
-            <path d="M470 84 h330 a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-330 z"/>
-            <path d="M540 110 v18 a5 5 0 0 0 5 5 h12 a5 5 0 0 0 5 -5 v-18"/>
-            <path d="M792 78 l10 -6"/>
+  <div class="fig figguide" aria-label="Figure 1: Glock 19 guided field strip, frozen at step 8 of 14 — remove the barrel">
+    <div class="figbar"><span><b>FIG. 1</b> — GUIDED FIELD STRIP, GLOCK 19</span><span>ORTHO / MUZZLE RIGHT</span></div>
+    <div class="figstep"><span class="sn">STEP 8 / 14</span><span class="st">REMOVE THE BARREL</span></div>
+    <div class="figbody figbody--guide">
+      <div class="figframe">
+        <!-- z-order per EXP_LAYERS: mag,rsa (under) · barrel (highlighted) · slide,frame (over) -->
+        <img class="gl" src="assets/fig1_g19_under.png" alt="" aria-hidden="true">
+        <img class="gl hl" src="assets/fig1_g19_barrel.png" alt="Glock 19 barrel, highlighted — the part removed at this step of the guide">
+        <img class="gl" src="assets/fig1_g19_over.png" alt="" aria-hidden="true">
+        <!-- dim numbered rings at each part's measured center; one bright step marker (◀) exactly as the guide renders step 8 -->
+        <svg class="rings" viewBox="0 0 985 1379" role="presentation" aria-hidden="true">
+          <defs><filter id="mkglow" x="-140%" y="-140%" width="380%" height="380%"><feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#F59E0B" flood-opacity="0.85"/></filter></defs>
+          <g class="dim" fill="none" stroke="#F59E0B" stroke-width="2.2">
+            <circle cx="538" cy="101.5" r="32"/>
+            <circle cx="679" cy="384.5" r="32"/>
+            <circle cx="767.5" cy="257.5" r="32"/>
+            <circle cx="520.5" cy="664" r="32"/>
+            <circle cx="186" cy="1125" r="32"/>
           </g>
-          <!-- 2: forend / pump (below tube) -->
-          <g>
-            <path d="M470 208 h150 l16 8 v22 l-10 6 h-156 a5 5 0 0 1 -5 -5 v-26 a5 5 0 0 1 5 -5 z"/>
-            <path d="M478 220 h132"/>
+          <g class="dim" font-family="'IBM Plex Mono',monospace" font-size="30" fill="#F59E0B" text-anchor="middle" dominant-baseline="central">
+            <text x="538" y="101.5">1</text>
+            <text x="679" y="384.5">2</text>
+            <text x="767.5" y="257.5">3</text>
+            <text x="520.5" y="664">4</text>
+            <text x="186" y="1125">5</text>
           </g>
-          <!-- 3: receiver + magtube + stock -->
-          <g>
-            <path d="M120 176 h190 a8 8 0 0 1 8 8 v34 a8 8 0 0 1 -8 8 h-60 l-14 10 h-40 l-12 -10 h-64 z"/>
-            <path d="M318 190 h190 a5 5 0 0 1 5 5 v14 a5 5 0 0 1 -5 5 h-190"/>
-            <path d="M516 191 v22"/>
-            <path d="M120 176 l-52 -18 v78 l52 -10"/>
-            <path d="M236 226 c2 12 8 18 18 18 h10 c8 0 12 -6 12 -14 l-6 -4 h-20"/>
-          </g>
-        </g>
-        <!-- leaders + callouts -->
-        <g stroke="#F59E0B" stroke-width="1.4" stroke-dasharray="4 5" fill="none">
-          <path d="M640 66 v-22"/>
-          <path d="M545 250 v22"/>
-          <path d="M300 158 v-24"/>
-        </g>
-        <g font-family="'IBM Plex Mono',monospace" font-size="17" fill="#F59E0B" text-anchor="middle">
-          <circle cx="640" cy="32" r="14" fill="none" stroke="#F59E0B" stroke-width="1.6"/><text x="640" y="38">1</text>
-          <circle cx="545" cy="284" r="14" fill="none" stroke="#F59E0B" stroke-width="1.6"/><text x="545" y="290">2</text>
-          <circle cx="300" cy="122" r="14" fill="none" stroke="#F59E0B" stroke-width="1.6"/><text x="300" y="128">3</text>
-        </g>
-      </svg>
+          <text class="mk" x="679.6" y="447" text-anchor="middle" dominant-baseline="central" filter="url(#mkglow)" font-size="54" fill="#F59E0B">&#9664;</text>
+        </svg>
+      </div>
     </div>
     <div class="leg">
-      <span><b>1</b>BARREL</span>
-      <span><b>2</b>FOREND / PUMP</span>
-      <span><b>3</b>RECEIVER, MAGAZINE TUBE &amp; STOCK</span>
+      <span><b>1</b>SLIDE</span>
+      <span><b>2</b>BARREL</span>
+      <span><b>3</b>RECOIL SPRING ASSEMBLY</span>
+      <span><b>4</b>FRAME</span>
+      <span><b>5</b>MAGAZINE</span>
     </div>
   </div>
 
@@ -157,6 +186,14 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <div class="manualnote"><p><strong>Safety first, always.</strong> Fieldstrip is a maintenance aid, not a substitute for your firearm's owner's manual or for professional gunsmithing. Every guide begins with a verified-clear safety gate, and the app is intended for lawful owners aged 18 and over.</p></div>
   </section>
 
+  <div class="fig figdetail" aria-label="Figure 2: Glock 19 breech-face deep-clean detail, actual in-app guide art">
+    <div class="figbar"><span><b>FIG. 2</b> — DEEP CLEAN DETAIL · GLOCK 19 BREECH FACE</span><span>PRO GUIDE ART</span></div>
+    <div class="figbody figbody--detail">
+      <img src="assets/fig2_g19_breech.png" width="660" height="871" alt="Close-up render of a Glock 19 slide breech face — the firing-pin hole, extractor, and breech recesses — the exact view the app's deep-clean guide walks you through">
+    </div>
+    <div class="leg"><span>Actual in-app art from the Pro deep-clean guide — the breech face as you inspect and clean it.</span></div>
+  </div>
+
   <section id="privacy">
     <span class="secno">2.0</span>
     <h2>Privacy posture</h2>
@@ -164,12 +201,53 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <p><strong>Your records stay on your device.</strong> Fieldstrip is local-first: firearm records, ammunition inventory, and maintenance history are stored on your phone, not on our servers. No account is required, we run no ads, and we do not sell or share user data. The full policy is published at <a href="privacy.html">fieldstripllc.com/privacy</a>.</p>
   </section>
 
-  <section id="company">
+  <section id="request">
     <span class="secno">3.0</span>
+    <h2>Request a firearm</h2>
+    <div class="rule"></div>
+    <p><strong>Don't see your firearm? Tell us.</strong> The catalog grows by demand. Fill in what you'd like a guided clean for and we'll add it to the queue — the most-requested platforms get built first.</p>
+    <form id="reqform" class="reqform" novalidate>
+      <div class="reqgrid">
+        <div class="field"><label for="rf-make">Make</label><input id="rf-make" name="make" type="text" autocomplete="off" placeholder="e.g. Ruger"></div>
+        <div class="field"><label for="rf-model">Model</label><input id="rf-model" name="model" type="text" autocomplete="off" placeholder="e.g. LCP MAX"></div>
+        <div class="field"><label for="rf-caliber">Caliber <span class="opt">· optional</span></label><input id="rf-caliber" name="caliber" type="text" autocomplete="off" placeholder="e.g. .380 ACP"></div>
+        <div class="field"><label for="rf-action">Action type <span class="opt">· optional</span></label>
+          <select id="rf-action" name="action">
+            <option value="">—</option>
+            <option>Semi-automatic</option>
+            <option>Revolver</option>
+            <option>Bolt-action</option>
+            <option>Lever-action</option>
+            <option>Pump-action</option>
+            <option>Break-action</option>
+            <option>Single-shot</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field full"><label for="rf-notes">Notes <span class="opt">· optional</span></label><textarea id="rf-notes" name="notes" placeholder="Variant, barrel length — anything that pins down the exact model."></textarea></div>
+      </div>
+      <div class="reqactions">
+        <button type="button" id="rf-build" class="btn">Build request email</button>
+        <span class="fine" style="margin:0">This composes an email in your own mail app — this site has no server and collects nothing.</span>
+      </div>
+    </form>
+    <details id="rf-fallback" class="reqfallback">
+      <summary>Didn't open? Copy the request</summary>
+      <pre id="rf-preview" aria-label="Composed request text"></pre>
+      <div class="fbrow">
+        <button type="button" id="rf-copy" class="btn ghost">Copy request</button>
+        <span class="fine" style="margin:0">Then email it to <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</span>
+      </div>
+    </details>
+    <p class="fine">In the app, firearm requests are a Pro feature; from the web, this form is all it takes. For anything else, reach us at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
+  </section>
+
+  <section id="company">
+    <span class="secno">4.0</span>
     <h2>The company</h2>
     <div class="rule"></div>
     <p><strong>Fieldstrip L.L.C.</strong> is an independent software company registered in the State of Arizona and based in Lake Havasu City. We build software for responsible firearm ownership — starting with the maintenance app we wished existed: one that treats a cleaning session with the same rigor as an armorer's manual and the same care as a well-kept logbook.</p>
-    <p>Fieldstrip is currently in active development, with a native Android release first and iOS following. For product questions, partnership inquiries, or press, reach us any time at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
+    <p>Fieldstrip's first release is a native Android build, with iOS to follow. For product questions, partnership inquiries, or press, reach us any time at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
   </section>
 
 </main>
@@ -184,5 +262,45 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   </div>
 </footer>
 
+<script>
+/* Request form — composes a mailto entirely client-side. No network, no server, nothing
+   collected: the user's own mail app sends the message. Fallback = copy the composed text. */
+(function(){
+  var f=document.getElementById('reqform'); if(!f) return;
+  function val(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  function compose(){
+    var make=val('rf-make'),model=val('rf-model'),cal=val('rf-caliber'),act=val('rf-action'),notes=val('rf-notes');
+    var subject='FS-REQ (web): '+((make+' '+model).replace(/\s+/g,' ').trim());
+    var body=[
+      'Firearm request — Fieldstrip','',
+      'Make: '+(make||'—'),
+      'Model: '+(model||'—'),
+      'Caliber: '+(cal||'—'),
+      'Action type: '+(act||'—'),
+      '','Notes:',(notes||'—'),
+      '','(Composed on fieldstripllc.com — the site collects nothing.)'
+    ].join('\n');
+    return {subject:subject,body:body};
+  }
+  function refresh(){var c=compose();document.getElementById('rf-preview').textContent='Subject: '+c.subject+'\n\n'+c.body;return c;}
+  refresh();
+  document.getElementById('rf-build').addEventListener('click',function(){
+    var make=val('rf-make'),model=val('rf-model');
+    if(!make||!model){alert('Add at least a make and model so we know what to build.');document.getElementById(make?'rf-model':'rf-make').focus();return;}
+    var c=refresh();
+    var href='mailto:contact@fieldstripllc.com?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
+    window.location.href=href;
+    document.getElementById('rf-fallback').open=true;
+  });
+  document.getElementById('rf-copy').addEventListener('click',function(){
+    refresh();
+    var text=document.getElementById('rf-preview').textContent;
+    var btn=this,label=btn.textContent;
+    var done=function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,select);}else select();
+    function select(){var pre=document.getElementById('rf-preview');var r=document.createRange();r.selectNodeContents(pre);var s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');done();}catch(e){}s.removeAllRanges();}
+  });
+})();
+</script>
 </body>
 </html>
