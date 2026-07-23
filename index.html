@@ -107,7 +107,44 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 .footrow{display:flex;flex-wrap:wrap;gap:10px 34px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
 .footrow a{color:var(--muted)}
 .footrow a:hover{color:var(--amber)}
+/* AT THE BENCH sub-block (under §1 The Product) */
+.bench{margin:26px 0 8px}
+.benchhead{font-family:var(--disp);font-weight:600;font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);margin:0 0 6px}
+.benchhead .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber);display:block;margin-bottom:4px}
+.benchfig{border:1px solid var(--line);background:var(--panel);border-radius:4px;overflow:hidden;margin:18px 0 0}
+.benchfig .figbar{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted)}
+.benchfig .figbar b{color:var(--amber);font-weight:500}
+.benchfig img{display:block;width:100%;height:auto}
+.benchfig .cap{padding:12px 16px 14px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.03em}
+
+/* CAPABILITY INDEX spec-sheet */
+.capsheet{border:1px solid var(--line);background:var(--panel);border-radius:4px;overflow:hidden;margin:10px 0 16px}
+.caprow{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--line)}
+.caprow:last-child{border-bottom:none}
+.capk{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--amber);text-transform:uppercase;padding:15px 16px;border-right:1px solid var(--line);background:rgba(0,0,0,.14)}
+.capv{padding:13px 18px;font-size:14px;color:var(--muted);line-height:1.55}
+.capv b{font-family:var(--disp);font-weight:700;font-size:21px;color:var(--bone);letter-spacing:.02em;margin-right:9px}
+.capv .u{color:var(--bone)}
+@media(max-width:600px){.caprow{grid-template-columns:1fr}.capk{border-right:none;border-bottom:1px solid var(--line)}}
+
+/* FREE & PRO tier plate */
+.tierlead{max-width:720px}
+.tiergrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:10px 0 16px}
+.tier{background:var(--panel);padding:24px 22px 26px}
+.tier.pro{background:linear-gradient(180deg,rgba(245,158,11,.05),rgba(245,158,11,0) 120px),var(--panel)}
+.tierhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.tiername{font-family:var(--disp);font-weight:700;font-size:23px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone)}
+.tier.pro .tiername{color:var(--amber)}
+.tiertag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--muted)}
+.tiersub{font-size:13.5px;color:var(--muted);margin:6px 0 16px;line-height:1.5}
+.tierlist{list-style:none;display:flex;flex-direction:column;gap:11px}
+.tierlist li{display:flex;gap:10px;font-size:14px;line-height:1.5}
+.tierlist li .ck{color:var(--amber);font-weight:700;flex:none;font-family:var(--mono)}
+.tierlist li b{color:var(--bone);font-weight:600}
+.tierlist li .d{color:var(--muted)}
+.pricenote{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--amber);border:1px dashed var(--amber);border-radius:4px;padding:11px 16px;display:inline-block;margin:2px 0 8px}
 @media(max-width:640px){nav{margin-left:0;width:100%}}
+@media(max-width:640px){.tiergrid{grid-template-columns:1fr}}
 @media(max-width:560px){.reqgrid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -119,6 +156,8 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <span class="plateinfo">FIELDSTRIP L.L.C. · LAKE HAVASU CITY, ARIZONA</span>
     <nav>
       <a href="#product">Product</a>
+      <a href="#capability">Capability</a>
+      <a href="#pricing">Free &amp; Pro</a>
       <a href="#privacy">Privacy</a>
       <a href="#request">Request</a>
       <a href="#company">Company</a>
@@ -131,7 +170,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 
   <div class="hero">
     <h1>Firearm maintenance,<br><em>step by step.</em></h1>
-    <p class="lede">Fieldstrip is a guided cleaning and maintenance app for firearm owners. Illustrated, animated field-strip instructions built from 3D-rendered diagrams — plus the record-keeping a safe, well-maintained collection deserves.</p>
+    <p class="lede">Fieldstrip is a guided cleaning and maintenance app for firearm owners. Illustrated, animated field-strip instructions built from 3D-rendered diagrams — plus the record-keeping a safe, well-maintained collection deserves. It's a workbench companion: the phone in your pocket at the range, the tablet propped on the mat at the bench.</p>
     <span class="status">STATUS: ANDROID RELEASE IN PREPARATION — iOS TO FOLLOW</span>
   </div>
 
@@ -183,11 +222,21 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
       <div class="spec"><span class="tag">GUIDE</span><h3>Guided clean player</h3><p>Illustrated field-strip and cleaning sequences with animated part diagrams, safety gates, and per-model procedures for pistols, shotguns, and rifles.</p></div>
       <div class="spec"><span class="tag">DIAGRAM</span><h3>Parts diagrams</h3><p>Exploded IPB-style views with numbered callouts, built from the same 3D renders as the guides. Tap a part to identify it.</p></div>
       <div class="spec"><span class="tag">TRACK</span><h3>Ammo locker</h3><p>Ammunition inventory with barcode check-in, automatic round-count deduction as you log range sessions, and low-stock flags.</p></div>
-      <div class="spec"><span class="tag">TRACK</span><h3>Magazines &amp; rotation</h3><p>Magazines as first-class items — capacity, role, and carry-rotation timers that remind you when it's time to rotate.</p></div>
+      <div class="spec"><span class="tag">TRACK</span><h3>Magazines &amp; rotation</h3><p>Magazines as first-class items — capacity, role, and carry-rotation timers.</p></div>
       <div class="spec"><span class="tag">MAINTAIN</span><h3>Care reminders</h3><p>Cleaning intervals, spring-life tracking, and scheduled reminders delivered as phone notifications. Factory maintenance notes surfaced where manufacturers publish them.</p></div>
       <div class="spec"><span class="tag">RECORD</span><h3>Service, mods &amp; zero</h3><p>A complete logbook per firearm: service and modification records, zero records by load and distance, and suppressor fouling logs.</p></div>
     </div>
     <div class="manualnote"><p><strong>Safety first, always.</strong> Fieldstrip is a maintenance aid, not a substitute for your firearm's owner's manual or for professional gunsmithing. Every guide begins with a verified-clear safety gate, and the app is intended for lawful owners aged 18 and over.</p></div>
+
+    <div class="bench">
+      <p class="benchhead"><span class="k">AT THE BENCH</span>Built for the cleaning session</p>
+      <p>The serious hobbyist doesn't strip a firearm on a phone screen. Fieldstrip runs full-screen on a tablet propped at the bench — large-format part diagrams, step-by-step pacing you set by hand, and records that update as you work. Everything runs fully offline, on phone and tablet alike, so the cleaning mat is the only thing on the bench that needs your attention.</p>
+      <div class="benchfig" aria-label="Deep-clean guide step in landscape tablet framing: a pump shotgun with its trigger group lifted out and highlighted">
+        <div class="figbar"><span><b>DEEP CLEAN</b> · PUMP SHOTGUN — TABLET (LANDSCAPE)</span><span>ORTHO / MUZZLE RIGHT</span></div>
+        <img src="assets/bench_m500_wide.png" width="1920" height="1080" alt="A pump shotgun rendered in landscape tablet framing with its trigger group dropped out and highlighted in amber — a deep-clean step as it fills a tablet screen at the bench">
+        <div class="cap">Actual guide art in landscape tablet framing — a deep-clean step with the trigger group lifted clear of the receiver.</div>
+      </div>
+    </div>
   </section>
 
   <div class="fig figdetail" aria-label="Figure 2: Glock 19 breech-face deep-clean detail, actual in-app guide art">
@@ -203,15 +252,84 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <p class="cap">Not a pistol this time. FIG. 3 is a live step from the AR-pattern guide, rendered from the same 3D part art as every guide — each family field-strips with the same illustrated, marked-up steps.</p>
   </div>
 
-  <section id="privacy">
+  <section id="capability">
     <span class="secno">2.0</span>
+    <h2>Capability index</h2>
+    <div class="rule"></div>
+    <p><strong>What's actually inside.</strong> Fieldstrip isn't a checklist with a firearm theme — it's an illustrated armorer's reference, built family by family and render by render. Every figure on this page is live app art; every number below is pulled from the shipping build.</p>
+    <div class="capsheet">
+      <!-- Catalog: CATALOG.length=457; by gp Pistols175/Rifles134/Shotguns50/Revolvers49/Suppressors49 (scratchpad/site/figgen/capindex.js) -->
+      <div class="caprow"><div class="capk">Catalog</div><div class="capv"><b>457</b> firearms &amp; suppressors indexed — 175 pistols, 134 rifles, 50 shotguns, 49 revolvers, 49 suppressors.</div></div>
+      <!-- Guided platforms: Object.keys(GUIDE_FAM).length=12; distinct guide keys = 10 GUIDE_FAM values + GUIDE_EXACT{rfsup}=11 (capindex2.js) -->
+      <div class="caprow"><div class="capk">Guided platforms</div><div class="capv"><b>12</b> platform families routed to <span class="u">11 illustrated guides</span> — Glock, 1911, AR-15/10, X95, 870 &amp; 500 pump, double- and single-action revolver, and serviceable / sealed / rimfire suppressors.</div></div>
+      <!-- Models covered: CATALOG entries where GUIDE_FAM[fm]||GUIDE_EXACT[id] = 175/457 (capindex2.js: Rev49+Sup49+AR32+Glock22+1911.10+revsa.10+...) -->
+      <div class="caprow"><div class="capk">Models with a guide</div><div class="capv"><b>175</b> of 457 models field-strip with a guide — every revolver and every suppressor, plus the Glock, 1911, AR, X95, 870 and 500 families.</div></div>
+      <!-- Guide depth: max lsteps across 8 layer families = 14 (g19 & ar15); loadFamily() -->
+      <div class="caprow"><div class="capk">Guide depth</div><div class="capv"><b>14</b> steps in the deepest guide — the Glock, field strip through deep clean, each step a rendered and marked-up part diagram.</div></div>
+      <!-- Deep-clean branches: 6 `deepSteps:[` blocks − 1 `delete GUNS.m500sw.deepSteps` = 5 active (g19,m500,g1911,revda,revsa) -->
+      <div class="caprow"><div class="capk">Deep-clean branches</div><div class="capv"><b>5</b> guides continue past the field strip into a full deep clean — Glock, 1911, both revolver actions, and the 500 pump.</div></div>
+      <!-- Detail insets: g19 LAYER_SET det_ layers = det_backplate,det_striker,det_extractor,det_breech = 4 (det_frame/DC5 deferred, not wired into the layer set) -->
+      <div class="caprow"><div class="capk">Detail-inset renders</div><div class="capv"><b>4</b> deep-clean close-ups on the Glock alone — backplate, striker, extractor, and breech face (FIG. 2).</div></div>
+      <!-- Trackers: ids present lkAdd/lkScanBtn (locker), magAdd/magRotRow (mags), careAdd + proSpringBtn/SPRINGS (care+spring), svcAdd/zeroAdd (logbook), proNfaBtn/stampThumb (nfa+photo) -->
+      <div class="caprow"><div class="capk">Trackers</div><div class="capv">Ammo locker (manual or barcode check-in, round-count deduction, low-stock flags), per-magazine records with carry-rotation timers, care reminders, recoil-spring life, a service / mods / zero logbook, and NFA records with a stored tax-stamp photo.</div></div>
+      <!-- Architecture: packaged release manifest strips INTERNET + ACCESS_NETWORK_STATE via src/release tools:node="remove"; 0 network perms remain (CAMERA/POST_NOTIFICATIONS/BOOT/WAKE_LOCK only) -->
+      <div class="caprow"><div class="capk">Architecture</div><div class="capv"><b>0</b> network permissions in the release build — no <span class="u">INTERNET</span> access is even declared, so everything you log stays on the device. <a href="#privacy">See privacy posture &darr;</a></div></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <span class="secno">3.0</span>
+    <h2>Free &amp; Pro</h2>
+    <div class="rule"></div>
+    <p class="tierlead"><strong>The whole toolkit is free to start — and it's generous.</strong> Every guided field strip, every parts diagram, and the core logbook are free, with no account and no trial clock. Pro is for the growing collection and the deeper work: more firearms, the detail-level clean, and the records a serious owner keeps.</p>
+
+    <div class="tiergrid">
+      <div class="tier free">
+        <div class="tierhead"><span class="tiername">Free</span><span class="tiertag">INCLUDED — NO ACCOUNT</span></div>
+        <p class="tiersub">Everything you need to strip, clean, and keep records for a couple of firearms.</p>
+        <ul class="tierlist">
+          <li><span class="ck">&#10003;</span><span><b>Guided field strips</b> <span class="d">— every catalog family: pistols, revolvers, rifles, shotguns, suppressors.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Parts diagrams</b> <span class="d">— exploded, numbered callouts; tap a part to identify it.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Two firearms in the safe</b> <span class="d">— full tracking for each.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>One custom firearm entry</b> <span class="d">— a full-featured tracker for a model not in the catalog.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Ammo locker</b> <span class="d">— manual check-in, round-count deduction as you log range days, low-stock flags.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Magazine records</b> <span class="d">— capacity and role tracked per magazine.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Care reminders</b> <span class="d">— cleaning intervals delivered as phone notifications.</span></span></li>
+          <li><span class="ck">&#10003;</span><span><b>Service &amp; mods logbook</b> <span class="d">— service, repair, and modification records per firearm.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="tier pro">
+        <div class="tierhead"><span class="tiername">Pro</span><span class="tiertag">EVERYTHING IN FREE, PLUS</span></div>
+        <p class="tiersub">For the full collection and the detail-level work a dedicated owner does.</p>
+        <ul class="tierlist">
+          <li><span class="ck">&#9656;</span><span><b>Unlimited firearms</b> <span class="d">— track the whole safe, not just two.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Unlimited custom entries + &ldquo;Strips like&hellip;&rdquo;</b> <span class="d">— assign any platform's guide and parts diagram to a clone the catalog doesn't cover yet.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Deep Clean guides</b> <span class="d">— the detailed strip past the field strip, down to the breech face (FIG. 2), where a guide has one.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Barcode ammo check-in</b> <span class="d">— scan a box straight into the locker.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Zero records</b> <span class="d">— distance, load, and optic notes, so a re-zero starts from facts.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Recoil-spring life</b> <span class="d">— round-count tracking against the service interval, with a replacement log.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Magazine carry-rotation timers</b> <span class="d">— reminders to rotate carry mags and rest the spring on schedule.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Suppressor fouling log</b> <span class="d">— baseline, weigh-ins, and a clean-due threshold, by weight.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>NFA record</b> <span class="d">— Form 4/1 dates, stamp reference, and a stored photo of the stamp.</span></span></li>
+          <li><span class="ck">&#9656;</span><span><b>Firearm requests</b> <span class="d">— ask us to add a missing model from inside the app.</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <span class="pricenote">PRO PRICING ANNOUNCED AT LAUNCH.</span>
+    <div class="manualnote"><p><strong>Your records are always yours.</strong> Everything you log stays on your device whether you upgrade or not — and if a Pro period ever lapses, nothing you recorded is deleted; it's simply there again when you upgrade.</p></div>
+  </section>
+
+  <section id="privacy">
+    <span class="secno">4.0</span>
     <h2>Privacy posture</h2>
     <div class="rule"></div>
     <p><strong>Your records stay on your device.</strong> Fieldstrip is local-first: firearm records, ammunition inventory, and maintenance history are stored on your phone, not on our servers. No account is required, we run no ads, and we do not sell or share user data. The full policy is published at <a href="privacy.html">fieldstripllc.com/privacy</a>.</p>
   </section>
 
   <section id="request">
-    <span class="secno">3.0</span>
+    <span class="secno">5.0</span>
     <h2>Request a firearm</h2>
     <div class="rule"></div>
     <p><strong>Don't see your firearm? Tell us.</strong> The catalog grows by demand. Fill in what you'd like a guided clean for and we'll add it to the queue — the most-requested platforms get built first.</p>
@@ -252,7 +370,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   </section>
 
   <section id="company">
-    <span class="secno">4.0</span>
+    <span class="secno">6.0</span>
     <h2>The company</h2>
     <div class="rule"></div>
     <p><strong>Fieldstrip L.L.C.</strong> is an independent software company registered in the State of Arizona and based in Lake Havasu City. We build software for responsible firearm ownership — starting with the maintenance app we wished existed: one that treats a cleaning session with the same rigor as an armorer's manual and the same care as a well-kept logbook.</p>
