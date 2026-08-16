@@ -171,12 +171,11 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   <div class="hero">
     <h1>Firearm maintenance,<br><em>step by step.</em></h1>
     <p class="lede">Fieldstrip is a guided cleaning and maintenance app for firearm owners. Illustrated, animated field-strip instructions built from 3D-rendered diagrams — plus the record-keeping a safe, well-maintained collection deserves. It's a workbench companion: the phone in your pocket at the range, the tablet propped on the mat at the bench.</p>
-    <span class="status">STATUS: ANDROID RELEASE IN PREPARATION — iOS TO FOLLOW</span>
   </div>
 
-  <div class="fig figguide" aria-label="Figure 1: Glock 19 guided field strip, frozen at step 8 of 14 — remove the barrel">
+  <div class="fig figguide" aria-label="Figure 1: Glock 19 guided field strip, frozen at step 8 of 9 — remove the barrel">
     <div class="figbar"><span><b>FIG. 1</b> — GUIDED FIELD STRIP, GLOCK 19</span><span>ORTHO / MUZZLE RIGHT</span></div>
-    <div class="figstep"><span class="sn">STEP 8 / 14</span><span class="st">REMOVE THE BARREL</span></div>
+    <div class="figstep"><span class="sn">STEP 8 / 9</span><span class="st">REMOVE THE BARREL</span></div>
     <div class="figbody figbody--guide">
       <div class="figframe">
         <!-- z-order per EXP_LAYERS: mag,rsa (under) · barrel (highlighted) · slide,frame (over) -->
@@ -262,8 +261,8 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
       <div class="caprow"><div class="capk">Catalog</div><div class="capv"><b>457</b> firearms &amp; suppressors indexed — 175 pistols, 134 rifles, 50 shotguns, 49 revolvers, 49 suppressors.</div></div>
       <!-- Guided platforms: Object.keys(GUIDE_FAM).length=12; distinct guide keys = 10 GUIDE_FAM values + GUIDE_EXACT{rfsup}=11 (capindex2.js) -->
       <div class="caprow"><div class="capk">Guided platforms</div><div class="capv"><b>12</b> platform families routed to <span class="u">11 illustrated guides</span> — Glock, 1911, AR-15/10, X95, 870 &amp; 500 pump, double- and single-action revolver, and serviceable / sealed / rimfire suppressors.</div></div>
-      <!-- Models covered: CATALOG entries where GUIDE_FAM[fm]||GUIDE_EXACT[id] = 175/457 (capindex2.js: Rev49+Sup49+AR32+Glock22+1911.10+revsa.10+...) -->
-      <div class="caprow"><div class="capk">Models with a guide</div><div class="capv"><b>175</b> of 457 models field-strip with a guide — every revolver and every suppressor, plus the Glock, 1911, AR, X95, 870 and 500 families.</div></div>
+      <!-- Models covered: CATALOG entries where GUIDE_FAM[fm]||GUIDE_EXACT[id] = 174/457 (capindex2.js: Rev49+Sup49+AR32+Glock22+1911.10+revsa.10+...) -->
+      <div class="caprow"><div class="capk">Models with a guide</div><div class="capv"><b>174</b> of 457 models field-strip with a guide — every revolver and every suppressor, plus the Glock, 1911, AR, X95, 870 and 500 families.</div></div>
       <!-- Guide depth: max lsteps across 8 layer families = 14 (g19 & ar15); loadFamily() -->
       <div class="caprow"><div class="capk">Guide depth</div><div class="capv"><b>14</b> steps in the deepest guide — the Glock, field strip through deep clean, each step a rendered and marked-up part diagram.</div></div>
       <!-- Deep-clean branches: 6 `deepSteps:[` blocks − 1 `delete GUNS.m500sw.deepSteps` = 5 active (g19,m500,g1911,revda,revsa) -->
@@ -317,7 +316,6 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
       </div>
     </div>
 
-    <span class="pricenote">PRO PRICING ANNOUNCED AT LAUNCH.</span>
     <div class="manualnote"><p><strong>Your records are always yours.</strong> Everything you log stays on your device whether you upgrade or not — and if a Pro period ever lapses, nothing you recorded is deleted; it's simply there again when you upgrade.</p></div>
   </section>
 
