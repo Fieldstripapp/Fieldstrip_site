@@ -249,6 +249,10 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
       </div>
     </div>
 
+    <!-- PARKED until app.fieldstripapp.com answers: uncomment to go live.
+    <p class="fine"><strong>Try it in your browser.</strong> The free tier runs at <a href="https://app.fieldstripapp.com">app.fieldstripapp.com</a> — same guides, same logbook, saved in your browser. A browser isn't a safe: clear its data and the collection goes with it. Pro is unlocked in the Android app.</p>
+    -->
+    <!-- PARKED until the Play listing URL exists: <a href="PLAY_LISTING_URL">Get it on Google Play</a> (official badge asset) -->
     <div class="manualnote"><p><strong>Your records are always yours.</strong> Everything you log stays on your device whether you upgrade or not. Nothing you record is ever deleted by us.</p></div>
   </section>
 
@@ -261,15 +265,22 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 
   <section id="request">
     <span class="secno">5.0</span>
-    <h2>Request a firearm</h2>
+    <h2>Request a firearm, suppressor, or feature</h2>
     <div class="rule"></div>
-    <p><strong>Don't see your firearm? Tell us.</strong> The catalog grows by demand. Fill in what you'd like a guided clean for and we'll add it to the queue — the most-requested platforms get built first.</p>
+    <p><strong>Don't see your firearm or suppressor? Want something the app doesn't do yet? Tell us.</strong> The catalog and the app both grow by demand — the most-requested platforms and features get built first.</p>
     <form id="reqform" class="reqform" novalidate>
       <div class="reqgrid">
-        <div class="field"><label for="rf-make">Make</label><input id="rf-make" name="make" type="text" autocomplete="off" placeholder="e.g. Ruger"></div>
-        <div class="field"><label for="rf-model">Model</label><input id="rf-model" name="model" type="text" autocomplete="off" placeholder="e.g. LCP MAX"></div>
-        <div class="field"><label for="rf-caliber">Caliber <span class="opt">· optional</span></label><input id="rf-caliber" name="caliber" type="text" autocomplete="off" placeholder="e.g. .380 ACP"></div>
-        <div class="field"><label for="rf-action">Action type <span class="opt">· optional</span></label>
+        <div class="field full"><label for="rf-kind">What are you requesting?</label>
+          <select id="rf-kind" name="kind">
+            <option value="firearm">A firearm</option>
+            <option value="suppressor">A suppressor</option>
+            <option value="feature">A feature or upgrade</option>
+          </select>
+        </div>
+        <div class="field" data-gun><label for="rf-make">Make</label><input id="rf-make" name="make" type="text" autocomplete="off" placeholder="e.g. Ruger"></div>
+        <div class="field" data-gun><label for="rf-model">Model</label><input id="rf-model" name="model" type="text" autocomplete="off" placeholder="e.g. LCP MAX"></div>
+        <div class="field" data-gun><label for="rf-caliber">Caliber <span class="opt">· optional</span></label><input id="rf-caliber" name="caliber" type="text" autocomplete="off" placeholder="e.g. .380 ACP"></div>
+        <div class="field" data-gun><label for="rf-action">Action type <span class="opt">· optional</span></label>
           <select id="rf-action" name="action">
             <option value="">—</option>
             <option>Semi-automatic</option>
@@ -282,7 +293,8 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
             <option>Other</option>
           </select>
         </div>
-        <div class="field full"><label for="rf-notes">Notes <span class="opt">· optional</span></label><textarea id="rf-notes" name="notes" placeholder="Variant, barrel length — anything that pins down the exact model."></textarea></div>
+        <div class="field full" data-feature hidden><label for="rf-feature">What should it do?</label><textarea id="rf-feature" name="feature" placeholder="Describe the feature or upgrade, and what you'd use it for."></textarea></div>
+        <div class="field full" data-gun><label for="rf-notes">Notes <span class="opt">· optional</span></label><textarea id="rf-notes" name="notes" placeholder="Variant, barrel length — anything that pins down the exact model."></textarea></div>
       </div>
       <div class="reqactions">
         <button type="button" id="rf-build" class="btn">Build request email</button>
@@ -297,7 +309,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
         <span class="fine" style="margin:0">Then email it to <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</span>
       </div>
     </details>
-    <p class="fine">In the app, firearm requests are a Pro feature; from the web, this form is all it takes. For anything else, reach us at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
+    <p class="fine">In the app, requests are a Pro feature; from the web, this form is all it takes. For anything else, reach us at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
   </section>
 
   <section id="company">
@@ -326,11 +338,24 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 (function(){
   var f=document.getElementById('reqform'); if(!f) return;
   function val(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  function kind(){ var k=document.getElementById('rf-kind'); return k?k.value:'firearm'; }
+  function syncKind(){
+    var feat=kind()==='feature';
+    f.querySelectorAll('[data-gun]').forEach(function(el){ el.hidden=feat; });
+    f.querySelectorAll('[data-feature]').forEach(function(el){ el.hidden=!feat; });
+  }
   function compose(){
+    var k=kind();
+    if(k==='feature'){
+      var want=val('rf-feature');
+      return {subject:'FS-FEAT (web): '+want.slice(0,60).replace(/\s+/g,' ').trim(),
+        body:['Feature request — Fieldstrip','','What it should do:',(want||'—'),'','(Composed on fieldstripapp.com — the site collects nothing.)'].join('\n')};
+    }
     var make=val('rf-make'),model=val('rf-model'),cal=val('rf-caliber'),act=val('rf-action'),notes=val('rf-notes');
+    var label=(k==='suppressor')?'Suppressor request':'Firearm request';
     var subject='FS-REQ (web): '+((make+' '+model).replace(/\s+/g,' ').trim());
     var body=[
-      'Firearm request — Fieldstrip','',
+      label+' — Fieldstrip','',
       'Make: '+(make||'—'),
       'Model: '+(model||'—'),
       'Caliber: '+(cal||'—'),
@@ -342,9 +367,14 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   }
   function refresh(){var c=compose();document.getElementById('rf-preview').textContent='Subject: '+c.subject+'\n\n'+c.body;return c;}
   refresh();
+  var kindSel=document.getElementById('rf-kind'); if(kindSel){ kindSel.addEventListener('change',function(){ syncKind(); refresh(); }); syncKind(); }
   document.getElementById('rf-build').addEventListener('click',function(){
-    var make=val('rf-make'),model=val('rf-model');
-    if(!make||!model){alert('Add at least a make and model so we know what to build.');document.getElementById(make?'rf-model':'rf-make').focus();return;}
+    if(kind()==='feature'){
+      if(!val('rf-feature')){alert('Tell us what it should do.');document.getElementById('rf-feature').focus();return;}
+    } else {
+      var make=val('rf-make'),model=val('rf-model');
+      if(!make||!model){alert('Add at least a make and model so we know what to build.');document.getElementById(make?'rf-model':'rf-make').focus();return;}
+    }
     var c=refresh();
     var href='mailto:contact@fieldstripllc.com?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
     window.location.href=href;
