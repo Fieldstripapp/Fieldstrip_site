@@ -71,6 +71,7 @@ h1 em{font-style:normal;color:var(--amber)}
 .reqgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field.full{grid-column:1 / -1}
+.field[hidden]{display:none}
 .field label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--amber);text-transform:uppercase}
 .field label .opt{color:var(--muted)}
 .field input,.field select,.field textarea{background:var(--ink);border:1px solid var(--line);border-radius:3px;color:var(--bone);font-family:var(--body);font-size:15px;padding:10px 12px;width:100%}
@@ -265,16 +266,16 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 
   <section id="request">
     <span class="secno">5.0</span>
-    <h2>Request a firearm, suppressor, or feature</h2>
+    <h2>Request a firearm, report a bug, or send an idea</h2>
     <div class="rule"></div>
-    <p><strong>Don't see your firearm or suppressor? Want something the app doesn't do yet? Tell us.</strong> The catalog and the app both grow by demand — the most-requested platforms and features get built first.</p>
+    <p><strong>Don't see your firearm or suppressor? Found a bug? Got an idea? Tell us.</strong> The catalog grows by demand — the most-requested platforms get built first — and every bug report and idea gets read.</p>
     <form id="reqform" class="reqform" novalidate>
       <div class="reqgrid">
         <div class="field full"><label for="rf-kind">What are you requesting?</label>
           <select id="rf-kind" name="kind">
             <option value="firearm">A firearm</option>
             <option value="suppressor">A suppressor</option>
-            <option value="feature">A feature or upgrade</option>
+            <option value="feature">A bug, or something you'd like added</option>
           </select>
         </div>
         <div class="field" data-gun><label for="rf-make">Make</label><input id="rf-make" name="make" type="text" autocomplete="off" placeholder="e.g. Ruger"></div>
@@ -293,7 +294,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
             <option>Other</option>
           </select>
         </div>
-        <div class="field full" data-feature hidden><label for="rf-feature">What should it do?</label><textarea id="rf-feature" name="feature" placeholder="Describe the feature or upgrade, and what you'd use it for."></textarea></div>
+        <div class="field full" data-feature hidden><label for="rf-feature">Tell us</label><textarea id="rf-feature" name="feature" placeholder="What went wrong, or what would be nice to have."></textarea></div>
         <div class="field full" data-gun><label for="rf-notes">Notes <span class="opt">· optional</span></label><textarea id="rf-notes" name="notes" placeholder="Variant, barrel length — anything that pins down the exact model."></textarea></div>
       </div>
       <div class="reqactions">
@@ -348,8 +349,8 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     var k=kind();
     if(k==='feature'){
       var want=val('rf-feature');
-      return {subject:'FS-FEAT (web): '+want.slice(0,60).replace(/\s+/g,' ').trim(),
-        body:['Feature request — Fieldstrip','','What it should do:',(want||'—'),'','(Composed on fieldstripapp.com — the site collects nothing.)'].join('\n')};
+      return {subject:'FS-NOTE (web): '+want.slice(0,60).replace(/\s+/g,' ').trim(),
+        body:['Bug or idea — Fieldstrip','',(want||'—'),'','(Composed on fieldstripapp.com — the site collects nothing.)'].join('\n')};
     }
     var make=val('rf-make'),model=val('rf-model'),cal=val('rf-caliber'),act=val('rf-action'),notes=val('rf-notes');
     var label=(k==='suppressor')?'Suppressor request':'Firearm request';
@@ -370,7 +371,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
   var kindSel=document.getElementById('rf-kind'); if(kindSel){ kindSel.addEventListener('change',function(){ syncKind(); refresh(); }); syncKind(); }
   document.getElementById('rf-build').addEventListener('click',function(){
     if(kind()==='feature'){
-      if(!val('rf-feature')){alert('Tell us what it should do.');document.getElementById('rf-feature').focus();return;}
+      if(!val('rf-feature')){alert('Tell us what went wrong, or what you\'d like added.');document.getElementById('rf-feature').focus();return;}
     } else {
       var make=val('rf-make'),model=val('rf-model');
       if(!make||!model){alert('Add at least a make and model so we know what to build.');document.getElementById(make?'rf-model':'rf-make').focus();return;}
