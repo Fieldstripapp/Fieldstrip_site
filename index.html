@@ -64,6 +64,9 @@ nav a:hover{color:var(--amber);text-decoration:none}
 .fig3 img{display:block;width:100%;height:auto;border-radius:4px}
 .fig3 .cap{max-width:700px;margin:12px 0 0;font-size:14px;color:var(--muted)}
 
+/* home reel: the three-minute widescreen cut at the top of the page (Darren 2026-11-21). The 16:9 box is reserved before the file loads so nothing below it jumps. */
+.reel{margin:28px 0 0;border:1px solid var(--line);background:var(--panel);border-radius:4px;overflow:hidden}
+.reel video{display:block;width:100%;height:auto;aspect-ratio:16 / 9;background:var(--panel)}
 .hero{padding:52px 0 10px}
 h1{font-family:var(--disp);font-weight:700;font-size:clamp(38px,6vw,62px);line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
 h1 em{font-style:normal;color:var(--amber)}
@@ -172,6 +175,10 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 </header>
 
 <main class="plate">
+
+  <div class="reel">
+    <video autoplay muted playsinline controls preload="metadata" poster="assets/fieldstrip-home-poster.jpg" src="assets/fieldstrip-home-3min.mp4"></video>
+  </div>
 
   <div class="hero">
     <h1>A record of your safe<br><em>that never leaves your safe.</em></h1>
