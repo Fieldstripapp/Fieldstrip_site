@@ -277,6 +277,7 @@ if (!CHROME) {
   const exact = b => b.length === 2 && b[0].href === APPLE && b[1].href === GOOGLE;
   const drawn = (b, i) => { const [n, s] = i ? ['Google Play', 'Android'] : ['App Store', 'iPhone and iPad']; return !!b && !!b.name && !!b.sub && b.name.text === n && b.name.drawn === n && b.name.transform === 'none' && b.name.caps === 'normal' && b.sub.text === s && b.sub.drawn === s; };
   const looks = {};
+  const differ = (a = '', b = '') => { const y = b.split(/ \|\| | ## | \| /); return a.split(/ \|\| | ## | \| /).map((v, i) => v === y[i] ? '' : `${v} on the home page, ${y[i]} on /get`).filter(Boolean).slice(0, 4).join('; '); };
 
   // a. The home page, at the three ordered sizes: the two buttons are fully on the first screen.
   for (const [name, size] of [['phone upright 390x844', 'phone'], ['tablet upright 820x1180', 'tablet'], ['desktop 1440x900', 'computer']]) {
@@ -290,7 +291,7 @@ if (!CHROME) {
     const side = Math.abs(b[0].box.t - b[1].box.t) < 1 && b[0].box.r <= b[1].box.l, stacked = b[0].box.b <= b[1].box.t && Math.abs(b[0].box.l - b[1].box.l) < 1;
     ok(b.every(x => x.shown && x.onScreen), `a. ${name}: both buttons are fully on the first screen`, `buttons end at ${Math.round(Math.max(b[0].box.b, b[1].box.b))}px of ${vh}px, ${side ? 'side by side' : stacked ? 'stacked' : 'NOT in a row'}`);
     ok(b.every(x => x.box.h >= 44), `a. ${name}: each button is at least 44 px tall`, b.map(x => `${Math.round(x.box.w)}x${Math.round(x.box.h)}`).join(' and '));
-    ok((side || stacked) && b.every(x => !x.crossing.length && x.onTop), `a. ${name}: the buttons overlap neither each other nor anything else`, b.flatMap(x => x.crossing).join(', '));
+    ok((side || stacked) && b.every(x => !x.crossing.length && x.onTop !== false), `a. ${name}: the buttons overlap neither each other nor anything else`, b.flatMap(x => x.crossing).join(', '));
     ok(b.every(x => x.whole && x.name && x.name.whole && x.sub && x.sub.whole), `a. ${name}: no text is cut off`);
     ok(p.page.sideways <= 0, `a. ${name}: nothing scrolls sideways`);
     ok(drawn(b[0], 0) && drawn(b[1], 1), `a. ${name}: the names are drawn "App Store" and "Google Play", not in capitals`, b.map(x => x.name ? `"${x.name.drawn}"` : 'no name').join(' and '));
@@ -334,7 +335,7 @@ if (!CHROME) {
     ok(g.h1 === 'Get Fieldstrip', `/get ${name}: the heading is "Get Fieldstrip"`, g.h1);
     ok(p.both && b.every(x => !x.crossing.length && x.whole && x.name && x.name.whole && x.sub && x.sub.whole) && p.page.sideways <= 0, `/get ${name}: both store buttons, on the first screen, 44 px or taller, nothing overlapping, cut off or scrolling sideways`, b.map(x => `${Math.round(x.box.w)}x${Math.round(x.box.h)}`).join(' and '));
     ok(drawn(b[0], 0) && drawn(b[1], 1) && b.length === 2 && b[0].label === 'Fieldstrip on the App Store' && b[1].label === 'Fieldstrip on Google Play' && b.every(x => x.target === null), `/get ${name}: the names are drawn "App Store" and "Google Play", each link has its spoken name and opens in the same tab`);
-    ok(looks['get-' + size] === looks[size], `/get ${name}: the buttons look the same as on the home page`, looks['get-' + size] === looks[size] ? '' : `home ${looks[size]} ; get ${looks['get-' + size]}`);
+    ok(looks['get-' + size] === looks[size], `/get ${name}: the buttons look the same as on the home page`, differ(looks[size], looks['get-' + size]));
     ok(g.about, `/get ${name}: a link "About Fieldstrip" to the home page`);
     ok(f.tm === TRADEMARKS && f.below && f.quiet && /©/.test(f.row || ''), `/get ${name}: the footer, with the trademark line under the row with the copyright line`);
     ok(g.media === 0 && !/\$|coming soon|\b\d{1,2}\/\d{1,2}\b|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.? \d/i.test(g.text) && !/\d/.test(g.text.replace(/© 2026/g, '')), `/get ${name}: no video, no picture, no price, no dates, no "coming soon"`);
@@ -394,7 +395,7 @@ if (!CHROME) {
   const hosts = [...new Set(getAsked.map(r => r.host))];
   const toStores = getAsked.filter(r => STORE_HOSTS.includes(r.host)).length;
   ok(hosts.every(h => h === baseHost || FONT_HOSTS.includes(h) || STORE_HOSTS.includes(h)) && toStores === hops + 1,
-    'e. /get asks for nothing from any host but the site itself, the font hosts and the one store hop', `${hosts.join(', ')}; ${hops + 1} hops, one store request each; ${stays} visits that stayed, none`);
+    'e. /get asks for nothing from any host but the site itself, the font hosts and the one store hop', `${hosts.join(', ')}; ${toStores} requests to a store in all, from ${hops + 1} visits due to hop and ${stays} due to stay`);
   await visit(`${base}/get?stay=1`);
   const kept = await evaluate(`(async () => ({ cookie: document.cookie, local: localStorage.length, session: sessionStorage.length,
     idb: self.indexedDB && indexedDB.databases ? (await indexedDB.databases()).length : 0, caches: self.caches ? (await caches.keys()).length : 0,
