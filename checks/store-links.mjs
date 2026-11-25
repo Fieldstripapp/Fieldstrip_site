@@ -6,6 +6,10 @@
 // retired phrases are in no page and the two new sentences are there; (d) where fieldstripapp.com/get sends each kind
 // of browser; (e) /get asks nothing of any outside host but the fonts and the one store hop, and stores nothing;
 // (f) the hop uses location.replace.
+// Add-on of 2026-11-24 (terms and support), the lines that begin "add-on.": the terms page's refunds sentence and the
+// support page's backup answer name both stores and both kinds of device, and the old sentences are in no page; the
+// trademark line is in the footer of the home page, /get, terms and support; on terms and support at phone size
+// nothing scrolls sideways and no line of the footer sits on another.
 // Nothing goes to either store: inside the check every request to a host other than the site itself and the two font
 // hosts is refused before it leaves the PC, and the check only reads the address that was asked for.
 // When it serves the folder itself, /get is answered from get.html, the way the live host does.
@@ -30,6 +34,13 @@ const LEAD_BOLD = 'Your records never leave your phone. No subscription.';
 const LEAD = LEAD_BOLD + ' The guides and the core logbook are free, with no account and no trial clock. Pro is for the growing collection and the deeper work: more firearms, the detail-level clean, and the records a serious owner keeps. Pro is a one-time purchase. Everything you log stays on your device whether you upgrade or not.';
 const COMPANY = 'Fieldstrip is available for iPhone and iPad on the App Store and for Android on Google Play. For product questions, partnership inquiries, or press, reach us any time at contact@fieldstripllc.com.';
 const TRADEMARKS = 'iPhone and iPad are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Android and Google Play are trademarks of Google LLC.';
+// Add-on of 2026-11-24 (terms and support): the two sentences, before and after.
+const REFUNDS_OLD = "Refunds follow Google Play's refund policy.";
+const REFUNDS = 'Refunds follow the refund policy of the store you bought from: Google Play or the App Store.';
+const ITEM5 = "5. Limits. The app is provided as is. As far as the law allows, Fieldstrip L.L.C.'s liability is limited to what you paid for Pro. " + REFUNDS;
+const BACKUP_OLD = 'It writes a backup file to your Downloads folder';
+const BACKUP_NEW = ['On Android it writes a backup file to your Downloads folder.', 'On iPhone and iPad it saves it in the Files app, under On My iPhone or On My iPad, in the Fieldstrip folder.', 'Keep a copy somewhere safe, and restore it on a new phone from the same screen.'];
+const BACKUP = "Use the app's own Backup → Save to Device. " + BACKUP_NEW.join(' ') + ' Keep that backup current — deleting the app without a backup deletes the data, and we hold no copy on any server.';
 
 const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'].find(p => existsSync(p));
@@ -99,6 +110,14 @@ for (const phrase of ['free to start', 'native Android build']) {
 }
 ok(!/PLAY_LISTING_URL|PARKED until the Play listing/i.test(home), 'c. the parked Play listing comment is gone from the home page');
 ok(home.includes('<!-- PARKED until app.fieldstripapp.com answers: uncomment to go live.'), 'c. the other parked block (app.fieldstripapp.com) is still there');
+
+// Add-on: the two retired sentences are in no page (any letter case, comments and all). The new backup answer still says
+// "On Android it writes a backup file to your Downloads folder", so those words pass only where "On Android" stands in front of them.
+for (const [old, re] of [[REFUNDS_OLD, /Refunds\s+follow\s+Google\s+Play(?:'|’|&rsquo;|&#0*39;|&apos;)s\s+refund\s+policy\./i],
+  [BACKUP_OLD, /(?<!\bOn\s+Android\s+)It\s+writes\s+a\s+backup\s+file\s+to\s+your\s+Downloads\s+folder/i]]) {
+  const hits = PAGES.filter(p => re.test(src[p]) || re.test(src[p].replace(/<[^>]*>/g, ' ')));
+  ok(!hits.length, `add-on. "${old}" appears in no page`, hits.length ? 'found in ' + hits.join(', ') : `${PAGES.length} pages searched, any letter case`);
+}
 
 // The two store addresses are spelled exactly, everywhere they are written; no app-only addresses.
 for (const path of PAGES) {
@@ -212,6 +231,38 @@ function lookAtGet() {
     about: about.length === 1 && isHome(about[0]),
     media: document.querySelectorAll('video, audio, img, picture, iframe, object, embed, canvas').length,
     text: document.body.innerText, cookie: document.cookie, local: localStorage.length, session: sessionStorage.length };
+}
+// Runs in any page (add-on): the footer. The trademark line and how it is drawn, and every line of text in the footer as a box.
+async function lookAtFoot(words) {
+  await document.fonts.ready;
+  const footer = document.querySelector('footer'), row = footer && footer.querySelector('.footrow'), tm = footer && footer.querySelector('.tmline');
+  const out = { sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth, row: row ? row.textContent : null,
+    tm: tm ? tm.textContent : null, tms: document.querySelectorAll('.tmline').length, written: document.body.textContent.split(words).length - 1, lines: [] };
+  if (row && tm) {
+    const r = row.getBoundingClientRect(), t = tm.getBoundingClientRect(), cs = getComputedStyle(tm), rs = getComputedStyle(row), px = n => Math.round(n * 10) / 10 + 'px';
+    out.shown = t.width > 0 && t.height > 0 && cs.visibility === 'visible' && +cs.opacity > 0;
+    out.below = t.top >= r.bottom;
+    out.quiet = parseFloat(cs.fontSize) < parseFloat(rs.fontSize) && cs.color === rs.color;
+    out.gap = px(t.top - r.bottom);
+    out.look = ['fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'color', 'textAlign', 'textTransform', 'maxWidth', 'marginTop', 'marginBottom'].map(k => k + ' ' + cs[k])
+      .concat('gap under the row ' + out.gap, 'left edge ' + px(t.left), 'width ' + px(t.width), 'height ' + px(t.height)).join(' | ');
+  }
+  if (footer) {
+    const walk = document.createTreeWalker(footer, NodeFilter.SHOW_TEXT);
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      const text = n.textContent.trim();
+      if (!text || getComputedStyle(n.parentElement).visibility !== 'visible') continue;
+      const g = document.createRange(); g.selectNodeContents(n);
+      for (const q of g.getClientRects()) if (q.width > 0 && q.height > 0) out.lines.push({ text: text.slice(0, 24), tm: !!tm && tm.contains(n), l: q.left, t: q.top + scrollY, r: q.right, b: q.bottom + scrollY });
+    }
+  }
+  return out;
+}
+// Runs in the terms page and the support page (add-on): item 5, and the answer under "How do I back up my data?".
+function lookAtWords() {
+  const q = [...document.querySelectorAll('main h2')].filter(h => h.textContent.trim().endsWith('How do I back up my data?'));
+  const a = q.length === 1 ? q[0].nextElementSibling : null;
+  return { item5: [...document.querySelectorAll('main p')].map(p => p.textContent).filter(t => t.startsWith('5. ')), backup: a && a.tagName === 'P' ? a.textContent : null };
 }
 
 if (!CHROME) {
@@ -389,6 +440,49 @@ if (!CHROME) {
       hops++;
       ok(saidSo && store.length === 1 && store[0] === goes, `d. ${name}: goes to the ${goes === APPLE ? 'Apple' : 'Google'} address, exactly`, store.length ? store.join(' , ') : 'stayed on the page');
     }
+  }
+
+  // Add-on (terms and support). At phone size: the trademark line is in the footer of all four pages that name the stores,
+  // drawn the same way as on the home page; on terms and support the two sentences read as ordered, nothing scrolls
+  // sideways, and no line of the footer sits on another.
+  const foot = async (path, size) => {
+    const reqs = await visit(base + path, { size });
+    if (path === '/get') { getAsked.push(...reqs); stays++; }
+    const f = await evaluate(`(${lookAtFoot})(${JSON.stringify(TRADEMARKS)})`);
+    if (!f) return null;
+    const L = f.lines, crossing = [];
+    for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) if (L[i].l < L[j].r - .5 && L[j].l < L[i].r - .5 && L[i].t < L[j].b - .5 && L[j].t < L[i].b - .5) crossing.push(`"${L[i].text}" and "${L[j].text}"`);
+    const count = part => new Set(L.filter(x => x.tm === part).map(x => Math.round(x.t / 4))).size;
+    return { ...f, crossing: [...new Set(crossing)], apart: L.length > 0 && !crossing.length, laid: `the row with the copyright line on ${count(false)} line${count(false) === 1 ? '' : 's'}, the trademark line on ${count(true)}` };
+  };
+  const unlike = (a = '', b = '') => { const y = b.split(' | '); return a.split(' | ').map((v, i) => v === y[i] ? '' : `${y[i]} here, ${v} on the home page`).filter(Boolean).slice(0, 4).join('; '); };
+  let homeLook = '';
+  for (const [name, path] of [['home page', '/'], ['/get', '/get'], ['terms', '/terms.html'], ['support', '/support.html']]) {
+    const f = await foot(path, 'phone');
+    if (!f) { ok(false, `add-on. ${name}, phone upright 390x844: the page could be read`); continue; }
+    if (path === '/terms.html' || path === '/support.html') {
+      const w = (await evaluate(`(${lookAtWords})()`)) || { item5: [], backup: null };
+      if (path === '/terms.html') ok(w.item5.length === 1 && w.item5[0] === ITEM5, `add-on. terms, item 5: "${REFUNDS}" and the rest of item 5 is as it was`,
+        w.item5.length !== 1 ? `${w.item5.length} paragraphs begin "5."` : !w.item5[0].endsWith(REFUNDS) ? `it reads: "${w.item5[0].includes('Refunds') ? w.item5[0].slice(w.item5[0].indexOf('Refunds')) : 'no refunds sentence'}"` : w.item5[0] !== ITEM5 ? 'the rest of item 5 has changed' : '');
+      else {
+        const missing = w.backup === null ? [] : BACKUP_NEW.filter(s => !w.backup.includes(s));
+        ok(w.backup === BACKUP, 'add-on. support, "How do I back up my data?": the Android sentence, the iPhone and iPad sentence and "Keep a copy somewhere safe" read as ordered, and the sentences around them are as they were',
+          w.backup === null ? 'the answer was not found' : missing.length ? 'missing: ' + missing.map(s => `"${s}"`).join(' , ') : w.backup !== BACKUP ? 'the sentences around them have changed' : '');
+      }
+    }
+    if (path === '/') homeLook = f.look || '';
+    const there = f.tm === TRADEMARKS && f.tms === 1 && f.written === 1 && !!f.shown && !!f.below && !!f.quiet && /©/.test(f.row || '');
+    const same = path === '/' || (!!f.look && f.look === homeLook);
+    ok(there && same, `add-on. ${name}, phone upright 390x844: the trademark line is in the footer, under the row with the copyright line${path === '/' ? '' : ', drawn the same way as on the home page'}`,
+      f.tm === null ? (f.tms ? 'the trademark line is not in the footer' : 'no trademark line on the page') : f.tm !== TRADEMARKS ? 'its words differ' : f.tms !== 1 || f.written !== 1 ? `written ${Math.max(f.tms, f.written)} times` : !f.shown ? 'it does not show' : !f.below ? 'it is not under the row' : !f.quiet || !/©/.test(f.row || '') ? 'it is not small and quiet under the copyright line' : !same ? unlike(homeLook, f.look) : `${f.gap} under the row`);
+    if (path === '/terms.html' || path === '/support.html') ok(f.sideways <= 0, `add-on. ${name}, phone upright 390x844: nothing scrolls sideways`, f.sideways > 0 ? `${f.sideways}px wider than the screen` : '');
+    ok(f.apart, `add-on. ${name}, phone upright 390x844: the footer's lines do not overlap`, f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.lines.length ? f.laid : 'no footer text found');
+  }
+  // Not ordered, checked anyway: terms and support on the narrowest phone and on a desktop.
+  for (const [name, path] of [['terms', '/terms.html'], ['support', '/support.html']]) for (const [what, size] of [['narrowest phone 320x568', [320, 568, true]], ['desktop 1440x900', 'computer']]) {
+    const f = await foot(path, size);
+    ok(!!f && f.tm === TRADEMARKS && !!f.below && f.sideways <= 0 && f.apart, `add-on. ${name}, ${what}: the trademark line is under the row with the copyright line, nothing scrolls sideways and the footer's lines do not overlap`,
+      !f ? 'the page could not be read' : f.tm !== TRADEMARKS ? 'no trademark line in the footer' : f.sideways > 0 ? `${f.sideways}px wider than the screen` : f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.laid);
   }
 
   // e. Across every visit to /get above: which hosts were asked, and what the browser holds for the site afterwards.
