@@ -162,6 +162,8 @@ ok(/(^|,)\s*noindex\s*(,|$)/.test(metas(get).robots || ''), '/get asks search en
 }
 
 // 3. Headless Chrome. Runs in the page: the store buttons, the footer, and whether anything scrolls sideways.
+// Sideways is measured against the screen's own width as the page is laid out (clientWidth), not innerWidth: with a phone
+// screen emulated, Chrome stretches innerWidth to the page's width when a page is too wide, and the page would read as fitting.
 async function lookAtPage() {
   await document.fonts.ready;
   const box = el => { const r = el.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height }; };
@@ -190,7 +192,7 @@ async function lookAtPage() {
         name ? look(name, ['fontSize', 'fontWeight', 'letterSpacing', 'lineHeight', 'textTransform']) : '', sub ? look(sub, ['fontSize', 'fontWeight', 'letterSpacing', 'lineHeight', 'textTransform']) : '', Math.round(r.w) + 'x' + Math.round(r.h)].join(' || ') };
   });
   const row = document.querySelector('footer .footrow'), tm = document.querySelector('footer .tmline');
-  return { buttons, sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+  return { buttons, sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth,
     footer: { row: row ? row.textContent : null, tm: tm ? tm.textContent : null, below: !!(row && tm) && box(tm).t >= box(row).b,
       quiet: !!(row && tm) && parseFloat(getComputedStyle(tm).fontSize) < parseFloat(getComputedStyle(row).fontSize) && getComputedStyle(tm).color === getComputedStyle(row).color } };
 }
@@ -236,7 +238,7 @@ function lookAtGet() {
 async function lookAtFoot(words) {
   await document.fonts.ready;
   const footer = document.querySelector('footer'), row = footer && footer.querySelector('.footrow'), tm = footer && footer.querySelector('.tmline');
-  const out = { sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth, row: row ? row.textContent : null,
+  const out = { sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth, row: row ? row.textContent : null,
     tm: tm ? tm.textContent : null, tms: document.querySelectorAll('.tmline').length, written: document.body.textContent.split(words).length - 1, lines: [] };
   if (row && tm) {
     const r = row.getBoundingClientRect(), t = tm.getBoundingClientRect(), cs = getComputedStyle(tm), rs = getComputedStyle(row), px = n => Math.round(n * 10) / 10 + 'px';
@@ -482,7 +484,7 @@ if (!CHROME) {
   for (const [name, path] of [['terms', '/terms.html'], ['support', '/support.html']]) for (const [what, size] of [['narrowest phone 320x568', [320, 568, true]], ['desktop 1440x900', 'computer']]) {
     const f = await foot(path, size);
     ok(!!f && f.tm === TRADEMARKS && !!f.below && f.sideways <= 0 && f.apart, `add-on. ${name}, ${what}: the trademark line is under the row with the copyright line, nothing scrolls sideways and the footer's lines do not overlap`,
-      !f ? 'the page could not be read' : f.tm !== TRADEMARKS ? 'no trademark line in the footer' : f.sideways > 0 ? `${f.sideways}px wider than the screen` : f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.laid);
+      !f ? 'the page could not be read' : f.tm === null ? 'no trademark line in the footer' : f.tm !== TRADEMARKS ? 'its words differ' : !f.below ? 'it is not under the row' : f.sideways > 0 ? `${f.sideways}px wider than the screen` : f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.laid);
   }
 
   // e. Across every visit to /get above: which hosts were asked, and what the browser holds for the site afterwards.
