@@ -10,6 +10,8 @@
 // support page's backup answer name both stores and both kinds of device, and the old sentences are in no page; the
 // trademark line is in the footer of the home page, /get, terms and support; on terms and support at phone size
 // nothing scrolls sideways and no line of the footer sits on another.
+// Tidy-up of 2026-11-24, the lines that begin "tidy-up.": the privacy page carries the trademark line too, so all five
+// pages do. The check removes its own scratch Chrome folder when it finishes, pass or fail.
 // Nothing goes to either store: inside the check every request to a host other than the site itself and the two font
 // hosts is refused before it leaves the PC, and the check only reads the address that was asked for.
 // When it serves the folder itself, /get is answered from get.html, the way the live host does.
@@ -274,7 +276,8 @@ if (!CHROME) {
   const profile = mkdtempSync(join(tmpdir(), 'fs-check-'));
   const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--hide-scrollbars', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
     `--host-resolver-rules=${STORE_HOSTS.map(h => `MAP ${h} ~NOTFOUND`).join(', ')}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
-  process.on('exit', () => { try { chrome.kill(); } catch {} });   // only the one Chrome this check started
+  // On every way out, pass or fail or stopped early: stop the one Chrome this check started, and remove its scratch folder.
+  process.on('exit', () => { try { chrome.kill(); } catch {} try { rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); } catch {} });
   const port = await new Promise((res, rej) => {
     let b = '';
     chrome.stderr.on('data', d => { b += d; const m = b.match(/127\.0\.0\.1:(\d+)/); if (m) res(+m[1]); });
@@ -444,9 +447,9 @@ if (!CHROME) {
     }
   }
 
-  // Add-on (terms and support). At phone size: the trademark line is in the footer of all four pages that name the stores,
-  // drawn the same way as on the home page; on terms and support the two sentences read as ordered, nothing scrolls
-  // sideways, and no line of the footer sits on another.
+  // Add-on (terms and support) and tidy-up (privacy). At phone size: the trademark line is in the footer of all five pages,
+  // drawn the same way as on the home page; on terms and support the two sentences read as ordered; on terms, support
+  // and privacy nothing scrolls sideways; and no line of any footer sits on another.
   const foot = async (path, size) => {
     const reqs = await visit(base + path, { size });
     if (path === '/get') { getAsked.push(...reqs); stays++; }
@@ -459,9 +462,12 @@ if (!CHROME) {
   };
   const unlike = (a = '', b = '') => { const y = b.split(' | '); return a.split(' | ').map((v, i) => v === y[i] ? '' : `${y[i]} here, ${v} on the home page`).filter(Boolean).slice(0, 4).join('; '); };
   let homeLook = '';
-  for (const [name, path] of [['home page', '/'], ['/get', '/get'], ['terms', '/terms.html'], ['support', '/support.html']]) {
+  const FIVE = [['home page', '/'], ['/get', '/get'], ['terms', '/terms.html'], ['support', '/support.html'], ['privacy', '/privacy.html']];
+  const without = [];
+  for (const [name, path] of FIVE) {
+    const tag = path === '/privacy.html' ? 'tidy-up.' : 'add-on.';
     const f = await foot(path, 'phone');
-    if (!f) { ok(false, `add-on. ${name}, phone upright 390x844: the page could be read`); continue; }
+    if (!f) { without.push(name); ok(false, `${tag} ${name}, phone upright 390x844: the page could be read`); continue; }
     if (path === '/terms.html' || path === '/support.html') {
       const w = (await evaluate(`(${lookAtWords})()`)) || { item5: [], backup: null };
       if (path === '/terms.html') ok(w.item5.length === 1 && w.item5[0] === ITEM5, `add-on. terms, item 5: "${REFUNDS}" and the rest of item 5 is as it was`,
@@ -475,15 +481,17 @@ if (!CHROME) {
     if (path === '/') homeLook = f.look || '';
     const there = f.tm === TRADEMARKS && f.tms === 1 && f.written === 1 && !!f.shown && !!f.below && !!f.quiet && /©/.test(f.row || '');
     const same = path === '/' || (!!f.look && f.look === homeLook);
-    ok(there && same, `add-on. ${name}, phone upright 390x844: the trademark line is in the footer, under the row with the copyright line${path === '/' ? '' : ', drawn the same way as on the home page'}`,
+    if (!(there && same)) without.push(name);
+    ok(there && same, `${tag} ${name}, phone upright 390x844: the trademark line is in the footer, under the row with the copyright line${path === '/' ? '' : ', drawn the same way as on the home page'}`,
       f.tm === null ? (f.tms ? 'the trademark line is not in the footer' : 'no trademark line on the page') : f.tm !== TRADEMARKS ? 'its words differ' : f.tms !== 1 || f.written !== 1 ? `written ${Math.max(f.tms, f.written)} times` : !f.shown ? 'it does not show' : !f.below ? 'it is not under the row' : !f.quiet || !/©/.test(f.row || '') ? 'it is not small and quiet under the copyright line' : !same ? unlike(homeLook, f.look) : `${f.gap} under the row`);
-    if (path === '/terms.html' || path === '/support.html') ok(f.sideways <= 0, `add-on. ${name}, phone upright 390x844: nothing scrolls sideways`, f.sideways > 0 ? `${f.sideways}px wider than the screen` : '');
-    ok(f.apart, `add-on. ${name}, phone upright 390x844: the footer's lines do not overlap`, f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.lines.length ? f.laid : 'no footer text found');
+    if (path !== '/' && path !== '/get') ok(f.sideways <= 0, `${tag} ${name}, phone upright 390x844: nothing scrolls sideways`, f.sideways > 0 ? `${f.sideways}px wider than the screen` : '');
+    ok(f.apart, `${tag} ${name}, phone upright 390x844: the footer's lines do not overlap`, f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.lines.length ? f.laid : 'no footer text found');
   }
-  // Not ordered, checked anyway: terms and support on the narrowest phone and on a desktop.
-  for (const [name, path] of [['terms', '/terms.html'], ['support', '/support.html']]) for (const [what, size] of [['narrowest phone 320x568', [320, 568, true]], ['desktop 1440x900', 'computer']]) {
+  ok(FIVE.length === PAGES.length && !without.length, 'tidy-up. all five pages carry the trademark line in the footer: home, /get, terms, support, privacy', without.length ? 'not on: ' + without.join(', ') : '');
+  // Not ordered, checked anyway: terms, support and privacy on the narrowest phone and on a desktop.
+  for (const [name, path] of FIVE.slice(2)) for (const [what, size] of [['narrowest phone 320x568', [320, 568, true]], ['desktop 1440x900', 'computer']]) {
     const f = await foot(path, size);
-    ok(!!f && f.tm === TRADEMARKS && !!f.below && f.sideways <= 0 && f.apart, `add-on. ${name}, ${what}: the trademark line is under the row with the copyright line, nothing scrolls sideways and the footer's lines do not overlap`,
+    ok(!!f && f.tm === TRADEMARKS && !!f.below && f.sideways <= 0 && f.apart, `${path === '/privacy.html' ? 'tidy-up.' : 'add-on.'} ${name}, ${what}: the trademark line is under the row with the copyright line, nothing scrolls sideways and the footer's lines do not overlap`,
       !f ? 'the page could not be read' : f.tm === null ? 'no trademark line in the footer' : f.tm !== TRADEMARKS ? 'its words differ' : !f.below ? 'it is not under the row' : f.sideways > 0 ? `${f.sideways}px wider than the screen` : f.crossing.length ? 'overlapping: ' + f.crossing.slice(0, 3).join(' ; ') : f.laid);
   }
 
