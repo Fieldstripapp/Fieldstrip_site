@@ -277,7 +277,10 @@ if (!CHROME) {
   const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--hide-scrollbars', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
     `--host-resolver-rules=${STORE_HOSTS.map(h => `MAP ${h} ~NOTFOUND`).join(', ')}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
   // On every way out, pass or fail or stopped early: stop the one Chrome this check started, and remove its scratch folder.
-  process.on('exit', () => { try { chrome.kill(); } catch {} try { rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); } catch {} });
+  // Chrome's helper processes hold files for a moment after Chrome stops, and Windows will not delete a file in use, so
+  // the removal is tried for up to five seconds (rmSync's own retries do not cover that refusal).
+  const clear = () => { for (let i = 0; i < 25; i++) { try { rmSync(profile, { recursive: true, force: true }); return true; } catch { Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 200); } } return false; };
+  process.on('exit', () => { try { chrome.kill(); } catch {} if (!clear()) console.log(`      (could not remove the scratch folder ${profile})`); });
   const port = await new Promise((res, rej) => {
     let b = '';
     chrome.stderr.on('data', d => { b += d; const m = b.match(/127\.0\.0\.1:(\d+)/); if (m) res(+m[1]); });
@@ -513,7 +516,7 @@ if (!CHROME) {
   ws.close();
   chrome.kill();
   await new Promise(r => { chrome.once('exit', r); setTimeout(r, 5000); });
-  try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch {}
+  clear();
 }
 if (server) server.close();
 console.log(failed ? `\n${failed} check(s) FAILED` : '\nAll store link checks passed');
