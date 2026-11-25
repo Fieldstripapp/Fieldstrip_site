@@ -4,10 +4,13 @@
 // Proves three things: the video box has area (a 16:9 box laid out before the file loads), the poster shows
 // (the poster image loads at 1280x720), and the file loads (the video reports its own size and enough data to
 // play). Also checks the attributes the page was ordered to carry and that nothing scrolls sideways.
+// Changed 2026-11-24 (tidy-up): sideways is measured against the screen's own width as the page is laid out (clientWidth),
+// not innerWidth, which Chrome stretches to a too-wide page's width when a phone screen is emulated; and the check
+// removes its own scratch Chrome folder when it finishes, pass or fail.
 // No dependencies: Node 22+ and the installed Chrome.
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { readFileSync, existsSync, mkdtempSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, mkdtempSync, statSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, extname, resolve } from 'node:path';
 
@@ -70,6 +73,8 @@ if (!CHROME) {
 } else {
   const profile = mkdtempSync(join(tmpdir(), 'fs-check-'));
   const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--hide-scrollbars', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+  // On every way out, pass or fail or stopped early: stop the one Chrome this check started, and remove its scratch folder.
+  process.on('exit', () => { try { chrome.kill(); } catch {} try { rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); } catch {} });
   const port = await new Promise((res, rej) => {
     let b = '';
     chrome.stderr.on('data', d => { b += d; const m = b.match(/127\.0\.0\.1:(\d+)/); if (m) res(+m[1]); });
@@ -101,7 +106,7 @@ if (!CHROME) {
       const r1 = v.getBoundingClientRect();
       return { box0: [Math.round(r0.width), Math.round(r0.height)], box1: [Math.round(r1.width), Math.round(r1.height)], posterOk,
         readyState: v.readyState, size: [v.videoWidth, v.videoHeight], paused: v.paused, muted: v.muted, error: v.error && v.error.code,
-        sideways: document.documentElement.scrollWidth > innerWidth, top: Math.round(r0.top) };
+        sideways: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth, top: Math.round(r0.top) };
     })()`);
     ok(v, `${name}: video element rendered`);
     if (!v) continue;
@@ -110,11 +115,13 @@ if (!CHROME) {
     ok(v.posterOk && v.posterOk[0] === 1280 && v.posterOk[1] === 720, `${name}: the poster shows (loads at 1280x720)`, String(v.posterOk));
     ok(v.readyState >= 2 && v.size[0] === 1280 && v.size[1] === 720 && !v.error, `${name}: the video file loads`, `readyState ${v.readyState}, ${v.size.join('x')}${v.error ? ', error ' + v.error : ''}`);
     ok(v.muted, `${name}: the sound is off`);
-    ok(!v.sideways, `${name}: nothing scrolls sideways`);
+    ok(v.sideways <= 0, `${name}: nothing scrolls sideways`, v.sideways > 0 ? `${v.sideways}px wider than the screen` : '');
     ok(v.top < h, `${name}: the box starts on the first screen`, `top ${v.top}px of ${h}px`);
   }
   ws.close();
   chrome.kill();
+  await new Promise(r => { chrome.once('exit', r); setTimeout(r, 5000); });
+  try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch {}
 }
 if (server) server.close();
 console.log(failed ? `\n${failed} check(s) FAILED` : '\nAll home video checks passed');
