@@ -8,6 +8,20 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Fieldstrip — A record of your safe that never leaves your safe</title>
 <meta name="description" content="Fieldstrip is a firearm maintenance and record-keeping app with no cloud and no accounts: step-by-step guides, ammunition tracking, and a complete logbook for every firearm you own. Lake Havasu City, Arizona.">
+<meta name="apple-itunes-app" content="app-id=6823353340">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fieldstrip">
+<meta property="og:title" content="Fieldstrip: firearm maintenance guides">
+<meta property="og:description" content="Fieldstrip is a firearm maintenance and record-keeping app with no cloud and no accounts: step-by-step guides, ammunition tracking, and a complete logbook for every firearm you own. Lake Havasu City, Arizona.">
+<meta property="og:url" content="https://fieldstripapp.com/">
+<meta property="og:image" content="https://fieldstripapp.com/assets/fieldstrip-home-poster.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fieldstrip: firearm maintenance guides">
+<meta name="twitter:description" content="Fieldstrip is a firearm maintenance and record-keeping app with no cloud and no accounts: step-by-step guides, ammunition tracking, and a complete logbook for every firearm you own. Lake Havasu City, Arizona.">
+<meta name="twitter:image" content="https://fieldstripapp.com/assets/fieldstrip-home-poster.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -67,6 +81,13 @@ nav a:hover{color:var(--amber);text-decoration:none}
 /* home reel: the three-minute widescreen cut at the top of the page (Darren 2026-11-21). The 16:9 box is reserved before the file loads so nothing below it jumps. */
 .reel{margin:28px 0 0;border:1px solid var(--line);background:var(--panel);border-radius:4px;overflow:hidden}
 .reel video{display:block;width:100%;height:auto;aspect-ratio:16 / 9;background:var(--panel)}
+/* store buttons: one row under the video, above the headline (Darren 2026-11-24). The site's own amber button, drawn as text: no store badge art. The names stay "App Store" and "Google Play", never capitals. */
+.stores{display:flex;gap:12px;margin:18px 0 0}
+.storebtn{flex:0 1 236px;min-width:0;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 12px;font-family:var(--mono);text-align:center;text-transform:none;color:var(--ink);background:var(--amber);border:1px solid var(--amber);border-radius:3px}
+.storebtn:hover{background:#ffb020;text-decoration:none}
+.storename{font-size:17px;font-weight:500;line-height:1.25;letter-spacing:.03em;white-space:nowrap;text-transform:none}
+.storefor{font-size:11.5px;line-height:1.3;letter-spacing:.06em;white-space:nowrap}
+@media(max-width:351px){.stores{flex-direction:column}.storebtn{flex:none}}
 .hero{padding:52px 0 10px}
 h1{font-family:var(--disp);font-weight:700;font-size:clamp(38px,6vw,62px);line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
 h1 em{font-style:normal;color:var(--amber)}
@@ -115,6 +136,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
 .footrow{display:flex;flex-wrap:wrap;gap:10px 34px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
 .footrow a{color:var(--muted)}
 .footrow a:hover{color:var(--amber)}
+.tmline{max-width:700px;margin-top:16px;font-size:11.5px;line-height:1.6;color:var(--muted)}
 /* AT THE BENCH sub-block (under §1 The Product) */
 .bench{margin:26px 0 8px}
 .benchhead{font-family:var(--disp);font-weight:600;font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);margin:0 0 6px}
@@ -180,6 +202,11 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <video autoplay muted playsinline controls preload="metadata" poster="assets/fieldstrip-home-poster.jpg" src="assets/fieldstrip-home-3min.mp4"></video>
   </div>
 
+  <div class="stores">
+    <a class="storebtn" href="https://apps.apple.com/app/id6823353340" aria-label="Fieldstrip on the App Store"><span class="storename">App Store</span><span class="storefor">iPhone and iPad</span></a>
+    <a class="storebtn" href="https://play.google.com/store/apps/details?id=com.fieldstripllc.fieldstrip" aria-label="Fieldstrip on Google Play"><span class="storename">Google Play</span><span class="storefor">Android</span></a>
+  </div>
+
   <div class="hero">
     <h1>A record of your safe<br><em>that never leaves your safe.</em></h1>
     <p class="lede">Your records never leave your phone. No cloud. No account. Nobody watching you clean your guns. Fieldstrip keeps your whole bench on your device &mdash; step-by-step guides, ammunition and magazine tracking, and a complete logbook for every firearm you own. It&rsquo;s a workbench companion: the phone in your pocket at the range, the tablet propped on the mat at the bench.</p>
@@ -226,7 +253,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <span class="secno">3.0</span>
     <h2>Free &amp; Pro</h2>
     <div class="rule"></div>
-    <p class="tierlead"><strong>Your records never leave your phone. The whole toolkit is free to start.</strong> The guides and the core logbook are free, with no account and no trial clock. Pro is for the growing collection and the deeper work: more firearms, the detail-level clean, and the records a serious owner keeps. Pro is a one-time purchase. Everything you log stays on your device whether you upgrade or not.</p>
+    <p class="tierlead"><strong>Your records never leave your phone. No subscription.</strong> The guides and the core logbook are free, with no account and no trial clock. Pro is for the growing collection and the deeper work: more firearms, the detail-level clean, and the records a serious owner keeps. Pro is a one-time purchase. Everything you log stays on your device whether you upgrade or not.</p>
 
     <div class="tiergrid">
       <div class="tier free">
@@ -266,7 +293,6 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <!-- PARKED until app.fieldstripapp.com answers: uncomment to go live.
     <p class="fine"><strong>Try it in your browser.</strong> The free tier runs at <a href="https://app.fieldstripapp.com">app.fieldstripapp.com</a> — same guides, same logbook, saved in your browser. A browser isn't a safe: clear its data and the collection goes with it. Pro is unlocked in the Android app.</p>
     -->
-    <!-- PARKED until the Play listing URL exists: <a href="PLAY_LISTING_URL">Get it on Google Play</a> (official badge asset) -->
     <div class="manualnote"><p><strong>Your records never leave your phone.</strong> Everything you log stays on your device whether you upgrade or not. Nothing you record is ever deleted by us.</p></div>
   </section>
 
@@ -331,7 +357,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <h2>The company</h2>
     <div class="rule"></div>
     <p><strong>Fieldstrip is built by Fieldstrip L.L.C.</strong>, an independent software company based in Lake Havasu City and registered in the State of Arizona. We build software for responsible firearm ownership — starting with the maintenance app we wished existed: one that treats a cleaning session with the same rigor as an armorer's manual and the same care as a well-kept logbook.</p>
-    <p>Fieldstrip is a native Android build. For product questions, partnership inquiries, or press, reach us any time at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
+    <p>Fieldstrip is available for iPhone and iPad on the App Store and for Android on Google Play. For product questions, partnership inquiries, or press, reach us any time at <a href="mailto:contact@fieldstripllc.com">contact@fieldstripllc.com</a>.</p>
   </section>
 
 </main>
@@ -345,6 +371,7 @@ footer{margin-top:78px;border-top:1px solid var(--line);padding:26px 0 40px}
     <a href="terms.html">TERMS</a>
     <a href="support.html">SUPPORT</a>
   </div>
+  <div class="plate"><p class="tmline">iPhone and iPad are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Android and Google Play are trademarks of Google LLC.</p></div>
 </footer>
 
 <script>
