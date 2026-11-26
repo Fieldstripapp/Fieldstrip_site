@@ -12,6 +12,7 @@
 // nothing scrolls sideways and no line of the footer sits on another.
 // Tidy-up of 2026-11-24, the lines that begin "tidy-up.": the privacy page carries the trademark line too, so all five
 // pages do. The check removes its own scratch Chrome folder when it finishes, pass or fail.
+// Release day, 2026-11-26, the line that begins "release-day.": the terms page reads Version 2 with that date, not Version 1.
 // Nothing goes to either store: inside the check every request to a host other than the site itself and the two font
 // hosts is refused before it leaves the PC, and the check only reads the address that was asked for.
 // When it serves the folder itself, /get is answered from get.html, the way the live host does.
@@ -42,6 +43,8 @@ const REFUNDS = 'Refunds follow the refund policy of the store you bought from: 
 const ITEM5 = "5. Limits. The app is provided as is. As far as the law allows, Fieldstrip L.L.C.'s liability is limited to what you paid for Pro. " + REFUNDS;
 const BACKUP_OLD = 'It writes a backup file to your Downloads folder';
 const BACKUP_NEW = ['On Android it writes a backup file to your Downloads folder.', 'On iPhone and iPad it saves it in the Files app, under On My iPhone or On My iPad, in the Fieldstrip folder.', 'Keep a copy somewhere safe, and restore it on a new phone from the same screen.'];
+// Release day (TIDY-UP.md): the terms page's version line, dated the day the store links went live.
+const TERMS_VERSION = 'VERSION 2 · NOVEMBER 26, 2026 · APPLIES TO THE FIELDSTRIP APP';
 const BACKUP = "Use the app's own Backup → Save to Device. " + BACKUP_NEW.join(' ') + ' Keep that backup current — deleting the app without a backup deletes the data, and we hold no copy on any server.';
 
 const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
@@ -119,6 +122,16 @@ for (const [old, re] of [[REFUNDS_OLD, /Refunds\s+follow\s+Google\s+Play(?:'|’
   [BACKUP_OLD, /(?<!\bOn\s+Android\s+)It\s+writes\s+a\s+backup\s+file\s+to\s+your\s+Downloads\s+folder/i]]) {
   const hits = PAGES.filter(p => re.test(src[p]) || re.test(src[p].replace(/<[^>]*>/g, ' ')));
   ok(!hits.length, `add-on. "${old}" appears in no page`, hits.length ? 'found in ' + hits.join(', ') : `${PAGES.length} pages searched, any letter case`);
+}
+
+// Release day, 2026-11-26 (TIDY-UP.md), the line that begins "release-day.": the terms page reads Version 2, dated the
+// day the new terms were first shown, and no longer reads Version 1.
+{
+  const terms = words(src['/terms.html']);
+  const seen = terms.split(TERMS_VERSION).length - 1;
+  const old = terms.match(/VERSION\s+1\b[^·]*/gi) || [];
+  ok(seen === 1 && !old.length, `release-day. the terms page reads "${TERMS_VERSION}" and no longer reads VERSION 1`,
+    old.length ? 'still reads: ' + old.map(s => s.trim()).join(' , ') : seen !== 1 ? `the Version 2 line is there ${seen} times` : '');
 }
 
 // The two store addresses are spelled exactly, everywhere they are written; no app-only addresses.
